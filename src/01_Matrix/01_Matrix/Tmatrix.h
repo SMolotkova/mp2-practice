@@ -147,7 +147,7 @@ TMatrix<ValueType> TMatrix<ValueType>::operator-(const TMatrix& tmp)
 }
 
 template<typename ValueType>
-bool TMatrix<ValueType>::operator==(const TMatrix& tmp)const
+bool TMatrix<ValueType>::operator==(const TMatrix<ValueType>& tmp)const //!!!!!!!!
 {
 	if (this->size != tmp.size)
 		throw "!size";
