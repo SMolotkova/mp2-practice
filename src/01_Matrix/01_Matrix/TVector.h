@@ -1,7 +1,7 @@
 #pragma once
 #include<iostream>
 #include<math.h>
-#include <exception>
+#include "Exceptions.h"
 using namespace std;
 template<typename ValueType>
 class TVector
@@ -13,19 +13,19 @@ protected:
 public:
 	TVector(int _size, int _startindex);
 	TVector(int _size);
-	TVector(const TVector& tmp);
+	TVector(const TVector<ValueType>& tmp);
 	~TVector();
 
-	TVector& operator=(const TVector& tmp)const;
-	ValueType length() const;
-	TVector operator+(const ValueType a);
-	TVector operator-(const ValueType a);
-	TVector operator*(const ValueType a);
-	TVector operator+(const TVector& tmp);
-	TVector operator-(const TVector& tmp);
-	ValueType operator*(const TVector& tmp);
-	bool operator==(const TVector& tmp)const;
-	bool operator!=(const TVector& tmp)const;
+	TVector<ValueType>& operator=(const TVector<ValueType>& tmp);
+	double length() const;
+	TVector<ValueType> operator+(const ValueType a);
+	TVector<ValueType> operator-(const ValueType a);
+	TVector<ValueType> operator*(const ValueType a);
+	TVector<ValueType> operator+(const TVector<ValueType>& tmp);
+	TVector<ValueType> operator-(const TVector& tmp);
+	ValueType operator*(const TVector<ValueType>& tmp);
+	bool operator==(const TVector<ValueType>& tmp)const;
+	bool operator!=(const TVector<ValueType>& tmp)const;
 
 	ValueType& operator[] (int i);
 	const ValueType& operator[] (int i) const;
@@ -43,56 +43,60 @@ public:
 			out << v.arr[i] << " ";
 		return out;
 	}
+
+	int Startindex() const;
+	int Size() const;
 };
 
-template<typename VauleType>
-TVector<VauleType>::TVector(int _size, int _startindex)
+template<typename ValueType>
+TVector<ValueType>::TVector(int _size, int _startindex)
 {
 	size = _size;
 	startindex = _startindex;
-	arr = new VauleType[size];
+	arr = new ValueType[size];
 }
 
-template<typename VauleType>
-TVector<VauleType>::TVector(int _size)
+template<typename ValueType>
+TVector<ValueType>::TVector(int _size)
 {
 	size = _size;
-	arr = new VauleType[size];
+	arr = new ValueType[size];
 }
 
-template<typename VauleType>
-TVector<VauleType>::TVector(const TVector& tmp)
+template<typename ValueType>
+TVector<ValueType>::TVector(const TVector& tmp)
 {
 	size = tmp.size;
 	startindex = tmp.startindex;
-	arr = new VauleType[size];
-	memcpy(tmp.arr, arr, sizeof(VauleType) * size);
+	arr = new ValueType[size];
+	memcpy(arr, tmp.arr, sizeof(ValueType) * size);
 }
 
-template<typename VauleType>
-TVector<VauleType>::~TVector()
+template<typename ValueType>
+TVector<ValueType>::~TVector()
 {
 	size = 0;
 	delete[] arr;
 }
 
-template<typename VauleType>
-TVector<VauleType>& TVector<VauleType>::operator=(const TVector& tmp)const
+template<typename ValueType>
+TVector<ValueType>& TVector<ValueType>::operator=(const TVector<ValueType>& tmp)
 {
 	if (*this == tmp)
 		return *this;
 	if (size != tmp.size)
 	{
 		delete[] arr;
+		arr = new ValueType[size];
 		size = tmp.size;
-		arr = new VauleType[size];
 	}
-	memcpy(tmp.arr, arr, sizeof(VauleType) * size);
+	startindex = tmp.startindex;
+	memcpy(arr, tmp.arr, sizeof(ValueType) * size);
 	return *this;
 }
 
 template<typename ValueType>
-ValueType TVector<ValueType>::length() const
+double TVector<ValueType>::length() const
 {
 	ValueType rez = 0;
 	for (int i = 0; i < size; i++)
@@ -103,7 +107,7 @@ ValueType TVector<ValueType>::length() const
 template<typename ValueType>
 TVector<ValueType> TVector<ValueType>::operator+(const ValueType a)
 {
-	TVector rez = TVector(size);
+	TVector<ValueType> rez = TVector(size);
 	for (int i = 0; i < size; i++)
 		rez.arr[i] = arr[i] + a;
 	return rez;
@@ -112,7 +116,7 @@ TVector<ValueType> TVector<ValueType>::operator+(const ValueType a)
 template<typename ValueType>
 TVector<ValueType> TVector<ValueType>::operator-(const ValueType a)
 {
-	TVector rez = TVector(size);
+	TVector<ValueType> rez = TVector(size);
 	for (int i = 0; i < size; i++)
 		rez.arr[i] = arr[i] - a;
 	return rez;
@@ -121,39 +125,39 @@ TVector<ValueType> TVector<ValueType>::operator-(const ValueType a)
 template<typename ValueType>
 TVector<ValueType> TVector<ValueType>::operator*(const ValueType a)
 {
-	TVector rez = TVector(size);
+	TVector<ValueType> rez = TVector(size);
 	for (int i = 0; i < size; i++)
 		rez.arr[i] = arr[i] * a;
 	return rez;
 }
 
 template<typename ValueType>
-TVector<ValueType> TVector<ValueType>::operator+(const TVector& tmp)
+TVector<ValueType> TVector<ValueType>::operator+(const TVector<ValueType>& tmp)
 {
 	if (size != tmp.size)
-		throw "!size";
-	TVector rez = TVector(size);
+		throw DifferentSizeOfVectors();
+	TVector<ValueType> rez = TVector(size);
 	for (int i = 0; i < size; i++)
 		rez.arr[i] = arr[i] + tmp.arr[i];
 	return rez;
 }
 
 template<typename ValueType>
-TVector<ValueType> TVector<ValueType>::operator-(const TVector& tmp)
+TVector<ValueType> TVector<ValueType>::operator-(const TVector<ValueType>& tmp)
 {
 	if (size != tmp.size)
-		throw "!size";
-	TVector rez = TVector(size);
+		throw DifferentSizeOfVectors();
+	TVector<ValueType> rez = TVector(size);
 	for (int i = 0; i < size; i++)
 		rez.arr[i] = arr[i] - tmp.arr[i];
 	return rez;
 }
 
 template<typename ValueType>
-ValueType TVector<ValueType>::operator*(const TVector& tmp)
+ValueType TVector<ValueType>::operator*(const TVector<ValueType>& tmp)
 {
 	if (size != tmp.size)
-		throw "!size";
+		throw DifferentSizeOfVectors();
 	ValueType rez = 0;
 	for (int i = 0; i < size; i++)
 		rez += arr[i] * tmp.arr[i];
@@ -161,10 +165,10 @@ ValueType TVector<ValueType>::operator*(const TVector& tmp)
 }
 
 template<typename ValueType>
-bool TVector<ValueType>::operator==(const TVector& tmp)const
+bool TVector<ValueType>::operator==(const TVector<ValueType>& tmp)const
 {
 	if (size != tmp.size)
-		throw "!size";
+		throw DifferentSizeOfVectors();
 	for (int i = 0; i < size; i++)
 		if (arr[i] != tmp.arr[i])
 			return false;
@@ -172,10 +176,10 @@ bool TVector<ValueType>::operator==(const TVector& tmp)const
 }
 
 template<typename ValueType>
-bool TVector<ValueType>::operator!=(const TVector& tmp)const
+bool TVector<ValueType>::operator!=(const TVector<ValueType>& tmp)const
 {
 	if (size != tmp.size)
-		throw "!size";
+		throw DifferentSizeOfVectors();
 	for (int i = 0; i < size; i++)
 		if (arr[i] != tmp.arr[i])
 			return true;
@@ -186,7 +190,7 @@ template<typename ValueType>
 ValueType& TVector<ValueType>::operator[] (int i)
 {
 	if ((i < 0) || (i >= size))
-		throw "No elem";
+		throw NoElements();
 	return arr[i];
 }
 
@@ -194,6 +198,18 @@ template<typename ValueType>
 const ValueType& TVector<ValueType>::operator[] (int i) const
 {
 	if ((i < 0) || (i >= size))
-		throw "No elem";
+		throw NoElements();
 	return arr[i];
+}
+
+template<typename ValueType>
+int TVector<ValueType>::Startindex() const
+{
+	return startindex;
+}
+
+template<typename ValueType>
+int TVector<ValueType>::Size() const
+{
+	return size;
 }
