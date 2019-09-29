@@ -2,6 +2,7 @@
 #include <iostream>
 #include "TVector.h"
 #include "Tmatrix.h"
+#include "Exceptions.h"
 using namespace std;
 
 void Creating()
