@@ -3,6 +3,7 @@
 #include "TVector.h"
 #include "Tmatrix.h"
 #include "Exceptions.h"
+
 using namespace std;
 
 void Creating()
@@ -26,7 +27,6 @@ void Copy_and_Deleting()
 	cin >> Vector2;
 	TVector<int> CopyVector(Vector2);
 	cout << "This vector is copy of Vector2:" << CopyVector << endl;
-	CopyVector.~TVector();
 }
 void Equality()
 {
@@ -181,12 +181,29 @@ void Index()
 		cout << s;
 	}
 }
+void MCreation()
+{
+	cout << "Testing of matrix:" << endl;
+	TMatrix<int> Matrix1(3);
+	cout << "Enter Matrix1:" << endl;
+	cin >> Matrix1;
+	cout << "Matrix1 1 is:" << endl << Matrix1;
+
+}
+void MAddingNumber()
+{
+	cout << "Adding Number 2:" << endl;
+	TMatrix<int> Matrix1(3);
+	cout << "Enter Matrix1:" << endl;
+	cin >> Matrix1;
+	cout << "Matrix1 + 2 is :" << endl << Matrix1+2;
+}
 
 int main()
 {
 	int n;
 	do {
-		cout << "Choose 1-Creating" << endl << "2-Copy_and_Deleting" << endl << "3-Equality" << endl << "4-Length" << endl << "5-Sum_Diff" << endl << "6-Multiplication" << endl << "7-Bool" << endl << "8-Index" << endl;
+		cout << "Choose:" << endl << "1-Creating" << endl << "2-Copy_and_Deleting" << endl << "3-Equality" << endl << "4-Length" << endl << "5-Sum_Diff" << endl << "6-Multiplication" << endl << "7-Bool" << endl << "8-Index" << endl << "9-MCreation" << endl << "10-MAddingNumber" << endl;
 		cin >> n;
 		switch (n)
 		{
@@ -230,8 +247,18 @@ int main()
 			Index();
 			break;
 		}
+		case 9:
+		{
+			MCreation();
+			break;
+		}
+		case 10:
+		{
+			MAddingNumber();
+			break;
+		}
 		default:
 			cout << "Wrong number";
 		}
-	} while (n != 8);
+	} while (n != 10);
 }
