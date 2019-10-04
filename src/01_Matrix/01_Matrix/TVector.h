@@ -1,6 +1,6 @@
 #pragma once
 #include<iostream>
-#include<math.h>
+#include <math.h>
 #include "Exceptions.h"
 using namespace std;
 template<typename ValueType>
@@ -11,9 +11,8 @@ protected:
 	ValueType* arr;
 	int startindex;
 public:
-	TVector(int _size, int _startindex);
-	TVector(int _size);
-	TVector(const TVector<ValueType>& tmp);
+	TVector(int _size = 3, int _startindex = 0);
+	TVector(const TVector& tmp);
 	~TVector();
 
 	TVector<ValueType>& operator=(const TVector<ValueType>& tmp);
@@ -39,28 +38,36 @@ public:
 
 	friend ostream& operator << (ostream& out, const TVector& v)
 	{
+		out << "[";
 		for (int i = 0; i < v.size; i++)
-			out << v.arr[i] << " ";
+		{
+			out << v.arr[i];
+			/*for (int q = 0; q < v.size-1; q++)
+			{
+				out << ",";
+			}*/
+		}
+		out << "]";
 		return out;
 	}
 
-	int Startindex() const;
+	int StartIndex() const;
 	int Size() const;
 };
 
 template<typename ValueType>
 TVector<ValueType>::TVector(int _size, int _startindex)
 {
+	//if (size == 0)
+	//	throw NoElements();
+	//size = _size;
+	//startindex = _startindex;
+	//arr = new ValueType[size];
 	size = _size;
+	arr = new ValueType[size];
 	startindex = _startindex;
-	arr = new ValueType[size];
-}
-
-template<typename ValueType>
-TVector<ValueType>::TVector(int _size)
-{
-	size = _size;
-	arr = new ValueType[size];
+	for (int i = 0; i < size; i++)
+		arr[i] = 0;
 }
 
 template<typename ValueType>
@@ -168,7 +175,7 @@ template<typename ValueType>
 bool TVector<ValueType>::operator==(const TVector<ValueType>& tmp)const
 {
 	if (size != tmp.size)
-		throw DifferentSizeOfVectors();
+		return false;
 	for (int i = 0; i < size; i++)
 		if (arr[i] != tmp.arr[i])
 			return false;
@@ -178,12 +185,7 @@ bool TVector<ValueType>::operator==(const TVector<ValueType>& tmp)const
 template<typename ValueType>
 bool TVector<ValueType>::operator!=(const TVector<ValueType>& tmp)const
 {
-	if (size != tmp.size)
-		throw DifferentSizeOfVectors();
-	for (int i = 0; i < size; i++)
-		if (arr[i] != tmp.arr[i])
-			return true;
-	return false;
+	return !(*this == tmp);
 }
 
 template<typename ValueType>
@@ -203,7 +205,7 @@ const ValueType& TVector<ValueType>::operator[] (int i) const
 }
 
 template<typename ValueType>
-int TVector<ValueType>::Startindex() const
+int TVector<ValueType>::StartIndex() const
 {
 	return startindex;
 }
