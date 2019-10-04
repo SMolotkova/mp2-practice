@@ -6,7 +6,7 @@ template<typename ValueType>
 class TMatrix : public TVector<TVector<ValueType> >
 {
 public:
-	TMatrix(int _size);
+	TMatrix(int size = 3);
 	TMatrix(const TMatrix& tmp);
 	TMatrix(const TVector<TVector<ValueType> >& tmp);
 	~TMatrix();
@@ -17,8 +17,8 @@ public:
 	TMatrix operator*(const ValueType a);
 	TMatrix operator+(const TMatrix& tmp);
 	TMatrix operator-(const TMatrix& tmp);
-	//TMatrix operator*(const TMatrix& tmp);
-	//TVector operator*(const TVector& tmp);
+	TMatrix operator*(const TMatrix& tmp);
+	TVector<ValueType> operator*(const TVector<ValueType>& tmp);
 	bool operator==(const TMatrix& tmp)const;
 	bool operator!=(const TMatrix& tmp)const;
 
@@ -32,53 +32,51 @@ public:
 	friend ostream& operator<<(ostream& out, const TMatrix& m)
 	{
 		for (int i = 0; i < m.size; i++)
-			out << m.arr[i] << endl;
+		{
+			/*for (int j = 0; j < m.arr[i].StartIndex(); j++)
+			{
+				out << "0, ";
+			}*/
+
+			out << m.arr[i]<<"\n";
+		}
 		return out;
 	}
 };
 
-template<typename ValueType>
-TMatrix<ValueType>::TMatrix(int _size)
+template<typename ValueType>//конструктор с параметром
+TMatrix<ValueType>::TMatrix(int size)
 {
-	this->size = _size;
+	this->size = size;
 	for (int i = 0; i < this->size; i++)
-	{
-		this->arr[i] = new TVector<ValueType>(this->size - i, i);
-	}
+		this->arr[i] = TVector<ValueType>(this->size - i, i);
 }
 
-template<typename ValueType>
-TMatrix<ValueType>::TMatrix(const TMatrix<ValueType>& tmp)
+template<typename ValueType>//конструктор копирования                     !!!!!!!!!!!!!!
+TMatrix<ValueType>::TMatrix(const TMatrix& tmp)
 {
 	this->size = tmp.size;
-	for (int i = 0; i < this->size; i++)
-	{
-		this->arr[i] = new TVector<ValueType>(this->size - i, i);
+	(this->arr) = new TVector<ValueType>[tmp.size];
+	for (int i = 0; i < tmp.size; i++)
 		this->arr[i] = tmp.arr[i];
-	}
 }
 
-template<typename ValueType>
+template<typename ValueType> //вектор векторов                          !!!!!!!!!!!!!!!!!!!!!!
 TMatrix<ValueType>::TMatrix(const TVector<TVector<ValueType> >& tmp)
 {
-	if ((sqrt(tmp.size * 8 + 1) - 1) % 2 == 1)
-		throw "!size";
-	this->size = (sqrt(tmp.size * 8 + 1) - 1) / 2;
-	int s = 0;
 	for (int i = 0; i < this->size; i++)
 	{
 		this->arr[i] = TVector<ValueType>(this->size - i, i);
-		for (int j = 0; j < this->size - i; j++)
-			this->arr[i].arr[j] = tmp.arr[s++];
+		for (int j = i; j < this->size; j++)
+			this->arr[i][j] = tmp[i][j];
 	}
+
 }
 
 template<typename ValueType>
 TMatrix<ValueType>::~TMatrix()
 {
-	for (int i = 0; i < this->size; i++)
-		delete[] this->arr[i];
-	this->size = 0;
+
 }
 
 template<typename ValueType>
@@ -90,7 +88,7 @@ TMatrix<ValueType>& TMatrix<ValueType>::operator=(const TMatrix& tmp)const
 	{
 		delete[] this->arr;
 		this->size = tmp.size;
-		this->arr = new TVector<ValueType>[this->size];
+		this->arr = TVector<ValueType>[this->size];
 	}
 	for (int i = 0; i < this->size; i++)
 		this->arr[i] = tmp.arr[i];
@@ -128,7 +126,7 @@ template<typename ValueType>
 TMatrix<ValueType> TMatrix<ValueType>::operator+(const TMatrix& tmp)
 {
 	if (this->size != tmp.size)
-		throw "!size";
+		throw DifferentSizeMatrix();
 	TMatrix<ValueType> rez = TMatrix<ValueType>(this->size);
 	for (int i = 0; i < this->size; i++)
 		rez.arr[i] = this->arr[i] + tmp.arr[i];
@@ -139,7 +137,7 @@ template<typename ValueType>
 TMatrix<ValueType> TMatrix<ValueType>::operator-(const TMatrix& tmp)
 {
 	if (this->size != tmp.size)
-		throw "!size";
+		throw DifferentSizeMatrix();
 	TMatrix<ValueType> rez = TMatrix<ValueType>(this->size);
 	for (int i = 0; i < this->size; i++)
 		rez.arr[i] = this->arr[i] - tmp.arr[i];
@@ -147,11 +145,11 @@ TMatrix<ValueType> TMatrix<ValueType>::operator-(const TMatrix& tmp)
 }
 
 template<typename ValueType>
-bool TMatrix<ValueType>::operator==(const TMatrix<ValueType>& tmp)const //!!!!!!!!
+bool TMatrix<ValueType>::operator==(const TMatrix<ValueType>& tmp)const
 {
 	if (this->size != tmp.size)
-		throw "!size";
-	for (int i = 0; i < this->size; i++)
+		throw DifferentSizeMatrix();
+	for (int i = 0; i < tmp.size; i++)
 		if (this->arr[i] != tmp.arr[i])
 			return false;
 	return true;
@@ -160,38 +158,43 @@ bool TMatrix<ValueType>::operator==(const TMatrix<ValueType>& tmp)const //!!!!!!
 template<typename ValueType>
 bool TMatrix<ValueType>::operator!=(const TMatrix& tmp)const
 {
-	if (this->size != tmp.size)
-		throw "!size";
-	for (int i = 0; i < this->size; i++)
-		if (this->arr[i] != tmp.arr[i])
-			return true;
-	return false;
+	return (!(*this == tmp));
 }
 
-/*template<typename ValueType>
-TMatrix<ValueType> TMatrix<ValueType>::operator*(const TMatrix& tmp)/////////////////////////////////
+template<typename ValueType>
+TMatrix<ValueType> TMatrix<ValueType>::operator*(const TMatrix& tmp) ///!!!!!!!!!!!!!!!!!!!!!!!!!!!
 {
 	if (this->size != tmp.size)
-		throw "!size";
+		throw DifferentSizeMatrix();
 	TMatrix<ValueType> rez = TMatrix<ValueType>(tmp);
-	res = res * 0;
-	/*for (int i = 0; i < this->size; i++)
+	for (int i = 0; i < rez.size; i++)
 	{
-	for (int j = this->arr[i].startindex; j < this->size; j++)
-	{
-	res.arr[i].arr[j - arr[i].startindex] += this->arr[i].arr[]
+		int untilRow = 1;
+		int index = tmp.arr[i].StartIndex();
+		for (int j = index; j < rez.size; j++)
+		{
+			rez.arr[i][j] = ValueType(0);
+			for (int k = 0; k < untilRow; k++)
+				rez.arr[i][j] = rez.arr[i][j] + this->arr[i][k + i] * tmp.arr[k + i][j];
+			untilRow++;
+		}
 	}
-	}
+	return rez;
 }
 template<typename ValueType>
 TVector<ValueType> TMatrix<ValueType>::operator*(const TVector<ValueType>& tmp)
 {
+	//int size = tmp.getSize();
 	if (this->size != tmp.size)
-		throw "!size";
-	TVector rez = TMatrix(this->size);
-	for (int i = 0; i < this->size; i++)
+		throw DifferentSizeOfVectors();
+	TVector<ValueType> rez(size);
+	for (int i = 0; i < size; i++)
 	{
-		rez.arr[i] = this->arr[i] * tmp;
+		rez[i] = ValueType(0);
+		int index = this->arr[i].StartIndex();
+		for (int j = index; j < size; j++)
+			rez[i] = rez[i] + this->arr[i][j] * tmp[j];
 	}
 	return rez;
-}*/
+}
+
