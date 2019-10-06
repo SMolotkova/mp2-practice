@@ -12,15 +12,15 @@ public:
 	}
 };
 
-//class DifferentSizeMatrix : public exception
-//{
-//	const string what_Str = "Разная размерность матриц.\n";
-//public:
-//	const char* what() const
-//	{
-//		return what_Str.c_str();
-//	}
-//};
+class DifferentSizeMatrix : public exception
+{
+	const string what_Str = "Р Р°Р·РЅР°СЏ СЂР°Р·РјРµСЂРЅРѕСЃС‚СЊ РјР°С‚СЂРёС†.\n";
+public:
+	const char* what() const
+	{
+		return what_Str.c_str();
+	}
+};
 class NoElements : public exception
 {
 	const string what_Str = "Element doesn't exist!\n";
@@ -30,4 +30,3 @@ public:
 		return what_Str.c_str();
 	}
 };
-
