@@ -1,19 +1,22 @@
 #pragma once
+
 #include <iostream>
 #include "TVector.h"
 #include "TMatrix.h"
 #include "Exceptions.h"
+
 using namespace std;
-void Creating() 
+
+void Creating()
 {
 	cout << "Testing of vectors:" << endl;
 	cout << "Constructor with parameters(2):" << endl;
-	TVector<int> Vector1(3, 2);
+	TVector<double> Vector1(3, 2);
 	cout << "Enter Vector1 of 3 elements" << endl;
 	cin >> Vector1;
 	cout << "Vector1 is:" << Vector1 << endl;
 	cout << "Constructor with parameter(1):" << endl;
-	TVector<int> Vector2(3);
+	TVector<double> Vector2(3);
 	cout << "Enter Vector2 of 3 elements:" << endl;
 	cin >> Vector2;
 	cout << "Vector2 is:" << Vector2 << endl;
@@ -25,7 +28,6 @@ void Copy_and_Deleting()
 	cin >> Vector2;
 	TVector<int> CopyVector(Vector2);
 	cout << "This vector is copy of Vector2:" << CopyVector << endl;
-	CopyVector.~TVector();
 }
 void Equality()
 {
@@ -70,13 +72,13 @@ void Sum_Diff()
 	int number;
 	cin >> number;
 	Vector2 = Vector2 + number;
-	cout << "Vector2+:" << number << "="<< Vector2 << endl;
+	cout << "Vector2+:" << number << "=" << Vector2 << endl;
 	cout << "Difference with number:" << endl << "Enter number:" << endl;
 	int nnumber;
 	cin >> nnumber;
 	Vector2 = Vector2 - nnumber;
 	cout << "Vector2-:" << nnumber << "=" << Vector2 << endl;
-	cout << "Sum with vectors:"<<Vector2+Vector1<< endl;
+	cout << "Sum with vectors:" << Vector2 + Vector1 << endl;
 	cout << "Diff of vectors:" << Vector2 - Vector1 << endl;
 	try
 	{
@@ -120,7 +122,7 @@ void Multiplication()
 
 	try
 	{
-		Vector1 = Vector1*Vector3;
+		Vector1 = Vector1 * Vector3;
 	}
 	catch (DifferentSizeOfVectors& e)
 	{
@@ -139,30 +141,10 @@ void Bool()
 	cout << "Enter Vector2 of 3 elements:" << endl;
 	cin >> Vector2;
 
-	if (Vector1 == Vector2)//исключение разные размеры
+	if (Vector1 == Vector2)
 		cout << "true" << endl;
-	if (Vector1 != Vector2)//исключение разные размеры
+	if (Vector1 != Vector2)
 		cout << "wrong" << endl;
-
-	try
-	{
-		if (Vector1 == Vector3)
-			cout << "true";
-	}
-	catch (DifferentSizeOfVectors& e)
-	{
-		cout << e.what();
-	}
-	
-	try
-	{
-		if (Vector1 != Vector3)
-			cout << "wrong";
-	}
-	catch (DifferentSizeOfVectors& e)
-	{
-		cout << e.what();
-	}
 }
 void Index()
 {
@@ -170,13 +152,12 @@ void Index()
 	cout << "Enter Vector1 of 3 elements" << endl;
 	cin >> Vector1;
 
-	//cout <<"Element 1 is:" Vector1[1];
 	try
 	{
 		int d;
 		cout << "Enter number of element:" << endl;
-		cin>> d;
-		cout << "Element" << d <<"is: "<< Vector1[d]<< endl;
+		cin >> d;
+		cout << "Element" << d << "is: " << Vector1[d] << endl;
 	}
 	catch (NoElements& n)
 	{
@@ -209,22 +190,22 @@ void Matrix_Number_Multiplication()
 {
 	cout << "Matrix Multiplication:" << endl;
 	cout << "NormaL situation :" << endl;
-	TMatrix<int> Matrix1(3);
+	TMatrix<double> Matrix1(3);
 	cout << "Enter Matrix1:" << endl;
 	cin >> Matrix1;
-	TMatrix<int> Matrix2(3);
+	TMatrix<double> Matrix2(3);
 	cout << "Enter Matrix2:" << endl;
 	cin >> Matrix2;
-	cout << "Matrix1*Matrix2:" << Matrix1*Matrix2 << endl;
+	cout << "Matrix1*Matrix2:" << Matrix1 * Matrix2 << endl;
 	cout << "Matrix1*3:" << Matrix1 * 3 << endl;
 	cout << "Exception situation:" << endl;
 	try
 	{
 		cout << "Matrix Multiplication:" << endl;
-		TMatrix<int> Matrix1(3);
+		TMatrix<double> Matrix1(3);
 		cout << "Enter Matrix1(3*3):" << endl;
 		cin >> Matrix1;
-		TMatrix<int> Matrix2(2);
+		TMatrix<double> Matrix2(2);
 		cout << "Enter Matrix2(2*2):" << endl;
 		cin >> Matrix2;
 		cout << "Matrix1*Matrix2:" << Matrix1 * Matrix2 << endl;
@@ -245,7 +226,7 @@ void MAdd_Diff_Matrix()
 	TMatrix<int> Matrix2(3);
 	cout << "Enter Matrix2(3*3):" << endl;
 	cin >> Matrix2;
-	cout << "Matrix1+Matrix2:" << endl << Matrix1+Matrix2;
+	cout << "Matrix1+Matrix2:" << endl << Matrix1 + Matrix2;
 	cout << "Exception situation:" << endl;
 	try
 	{
@@ -256,7 +237,8 @@ void MAdd_Diff_Matrix()
 		TMatrix<int> Matrix2(2);
 		cout << "Enter Matrix2(2*2):" << endl;
 		cin >> Matrix2;
-		cout << "Matrix1+Matrix2:" <<endl<< Matrix1 + Matrix2 << endl;
+		cout << "Matrix1+Matrix2:" << endl << Matrix1 + Matrix2 << endl;
+		cout << "Matrix1-Matrix2" << endl << Matrix1 - Matrix2 << endl;
 	}
 	catch (DifferentSizeMatrix& n)
 	{
@@ -264,14 +246,44 @@ void MAdd_Diff_Matrix()
 	}
 
 }
-int main() 
+void MandV()//переделать в double
+{
+	cout << "Matrix * Vector:" << endl;
+	cout << "NormaL situation :" << endl;
+	TMatrix<double> Matrix1(3);
+	cout << "Enter Matrix1(3*3):" << endl;
+	cin >> Matrix1;
+	TVector<double> Vector1(3);
+	cout << "Enter Vector1 of 3 elements" << endl;
+	cin >> Vector1;
+	cout << "Matrix1*Vector1:" << endl << Matrix1*Vector1;
+	cout << "Exception situation:" << endl;
+	try
+	{
+		cout << "Exception situation:" << endl;
+		TMatrix<double> Matrix2(3);
+		cout << "Enter Matrix2(3*3):" << endl;
+		cin >> Matrix2;
+		TVector<double> Vector2(4);
+		cout << "Enter Vector2 of 4 elements" << endl;
+		cin >> Vector1;
+		cout << "Matrix2*Vector2:" << endl << Matrix2 * Vector2;
+	}
+	catch (DifferentSizeMatrix& n)
+	{
+		cout << n.what();
+	}
+
+}
+int main()
 {
 	int n;
-	do 
+	do
 	{
-		
-		cout << "Choose 1-Creating" << endl << "2-Copy_and_Deleting" << endl << "3-Equality" << endl << "4-Length" << endl << "5-Sum_Diff" << endl << "6-Multiplication" << endl << "7-Bool" << endl << "8-Index" << endl;
-		cout << "9-MCreation" << endl<<"10-MAdd_Diff_Number"<<endl<<"11- Matrix_Number_Multiplication"<<endl<<"12-MAdd_Diff_Matrix"<<endl;
+
+		cout << "Choose" << endl << "1-Creating" << endl << "2-Copy_and_Deleting" << endl << "3-Equality" << endl << "4-Length" << endl << "5-Sum_Diff" << endl;
+		cout << "6-Multiplication" << endl << "7-Bool" << endl << "8-Index" << endl;
+		cout << "9-MCreation" << endl << "10-MAdd_Diff_Number" << endl << "11- Matrix_Number_Multiplication" << endl << "12-MAdd_Diff_Matrix" << endl << "13-MandV" << endl;
 		cin >> n;
 		switch (n)
 		{
@@ -335,8 +347,14 @@ int main()
 			MAdd_Diff_Matrix();
 			break;
 		}
+		case 13:
+		{
+			MandV();
+			break;
+		}
 		default:
 			cout << "Wrong number";
 		}
-	} while (n != 12);
+	} while (n != 13);
 }
+
