@@ -23,25 +23,25 @@ void Creating()
 }
 void Copy_and_Deleting()
 {
-	TVector<int> Vector2(3);
+	TVector<double> Vector2(3);
 	cout << "Enter Vector2 of 3 elements:" << endl;
 	cin >> Vector2;
-	TVector<int> CopyVector(Vector2);
+	TVector<double> CopyVector(Vector2);
 	cout << "This vector is copy of Vector2:" << CopyVector << endl;
 }
 void Equality()
 {
 	cout << "Equal vectors" << endl;
-	TVector<int> Vector1(3);
+	TVector<double> Vector1(3);
 	cout << "Vector1 is 1,2,3, enter :" << endl;
 	cin >> Vector1;
-	TVector<int> Vector2(3);
+	TVector<double> Vector2(3);
 	cout << "Vector2 is 1,2,3, enter :" << endl;
 	cin >> Vector2;
 	Vector1 = Vector2;
 	cout << "Vector1 is:" << Vector1 << endl;
 	cout << "Not equal vectors" << endl;
-	TVector<int> Vector3(3);
+	TVector<double> Vector3(3);
 	cout << "Vector3 is 1,5,11, enter :" << endl;
 	cin >> Vector3;
 	Vector1 = Vector3;
@@ -52,24 +52,24 @@ void Length()
 	int l;
 	cout << "Enter vector size" << endl;
 	cin >> l;
-	TVector<int> Vector1(l);
+	TVector<double> Vector1(l);
 	cout << "Enter Vector1 of " << l << "elements" << endl;
 	cin >> Vector1;
 	cout << "Length of Vector1 is:" << Vector1.length() << endl;
 }
 void Sum_Diff()
 {
-	TVector<int> Vector1(3);
+	TVector<double> Vector1(3);
 	cout << "Enter Vector1 of 3 elements" << endl;
 	cin >> Vector1;
-	TVector<int> Vector3(4);
+	TVector<double> Vector3(4);
 	cout << "Enter Vector3 of 4 elements" << endl;
 	cin >> Vector3;
-	TVector<int> Vector2(3);
+	TVector<double> Vector2(3);
 	cout << "Enter Vector2 of 3 elements:" << endl;
 	cin >> Vector2;
 	cout << "Sum with number:" << endl << "Enter number:" << endl;
-	int number;
+	double number;
 	cin >> number;
 	Vector2 = Vector2 + number;
 	cout << "Vector2+:" << number << "=" << Vector2 << endl;
@@ -100,13 +100,13 @@ void Sum_Diff()
 }
 void Multiplication()
 {
-	TVector<int> Vector1(3);
+	TVector<double> Vector1(3);
 	cout << "Enter Vector1 of 3 elements" << endl;
 	cin >> Vector1;
-	TVector<int> Vector3(4);
+	TVector<double> Vector3(4);
 	cout << "Enter Vector3 of 4 elements" << endl;
 	cin >> Vector3;
-	TVector<int> Vector2(3);
+	TVector<double> Vector2(3);
 	cout << "Enter Vector2 of 3 elements:" << endl;
 	cin >> Vector2;
 
@@ -131,13 +131,13 @@ void Multiplication()
 }
 void Bool()
 {
-	TVector<int> Vector1(3);
+	TVector<double> Vector1(3);
 	cout << "Enter Vector1 of 3 elements" << endl;
 	cin >> Vector1;
-	TVector<int> Vector3(4);
+	TVector<double> Vector3(4);
 	cout << "Enter Vector3 of 4 elements" << endl;
 	cin >> Vector3;
-	TVector<int> Vector2(3);
+	TVector<double> Vector2(3);
 	cout << "Enter Vector2 of 3 elements:" << endl;
 	cin >> Vector2;
 
@@ -148,7 +148,7 @@ void Bool()
 }
 void Index()
 {
-	TVector<int> Vector1(3);
+	TVector<double> Vector1(3);
 	cout << "Enter Vector1 of 3 elements" << endl;
 	cin >> Vector1;
 
@@ -168,7 +168,7 @@ void Index()
 void MCreation()
 {
 	cout << "Testing of matrix:" << endl;
-	TMatrix<int> Matrix1(3);
+	TMatrix<double> Matrix1(3);
 	cout << "Enter Matrix1:" << endl;
 	cin >> Matrix1;
 	cout << "Matrix1 1 is:" << endl << Matrix1;
@@ -178,7 +178,7 @@ void MCreation()
 void MAdd_Diff_Number()
 {
 	cout << "Adding Number 2:" << endl;
-	TMatrix<int> Matrix1(3);
+	TMatrix<double> Matrix1(3);
 	cout << "Enter Matrix1:" << endl;
 	cin >> Matrix1;
 	cout << "Matrix1 + 2 is :" << endl << Matrix1 + 2;
@@ -220,10 +220,10 @@ void MAdd_Diff_Matrix()
 {
 	cout << "Matrix Adding:" << endl;
 	cout << "NormaL situation :" << endl;
-	TMatrix<int> Matrix1(3);
+	TMatrix<double> Matrix1(3);
 	cout << "Enter Matrix1(3*3):" << endl;
 	cin >> Matrix1;
-	TMatrix<int> Matrix2(3);
+	TMatrix<double> Matrix2(3);
 	cout << "Enter Matrix2(3*3):" << endl;
 	cin >> Matrix2;
 	cout << "Matrix1+Matrix2:" << endl << Matrix1 + Matrix2;
@@ -231,10 +231,10 @@ void MAdd_Diff_Matrix()
 	try
 	{
 		cout << "MDiff:" << endl;
-		TMatrix<int> Matrix1(3);
+		TMatrix<double> Matrix1(3);
 		cout << "Enter Matrix1(3*3):" << endl;
 		cin >> Matrix1;
-		TMatrix<int> Matrix2(2);
+		TMatrix<double> Matrix2(2);
 		cout << "Enter Matrix2(2*2):" << endl;
 		cin >> Matrix2;
 		cout << "Matrix1+Matrix2:" << endl << Matrix1 + Matrix2 << endl;
