@@ -40,13 +40,11 @@ public:
 	friend ostream& operator << (ostream& out, const TVector<ValueType>& v)
 	{
 		out << "[";
+		for (int j = 0; j < v.Startindex(); j++)
+			cout << "  ";
 		for (int i = 0; i < v.size; i++)
 		{
 			out << v.arr[i] << " ";
-			/*for (int y = 0; y < v.size-1; y++
-			{
-				out << ",";
-			}*/
 		}
 		out << "]";
 		return out;
