@@ -29,7 +29,7 @@ public:
 	TVector operator*(const ValueType a);
 	TVector operator+(const TVector& tmp);
 	TVector operator-(const TVector& tmp);
-	ValueType operator*(const TVector& tmp);
+	ValueType operator*(const TVector& tmp)const;
 	bool operator==(const TVector& tmp)const;
 	bool operator!=(const TVector& tmp)const;
 
@@ -158,7 +158,7 @@ TVector<ValueType> TVector<ValueType>::operator-(const TVector<ValueType>& tmp)
 }
 
 template<typename ValueType>
-ValueType TVector<ValueType>::operator*(const TVector<ValueType>& tmp)
+ValueType TVector<ValueType>::operator*(const TVector<ValueType>& tmp)const
 {
 	if (this->size != tmp.size)
 		throw DifferentSizeOfVectors();
