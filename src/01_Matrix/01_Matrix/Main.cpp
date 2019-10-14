@@ -11,7 +11,7 @@ void Creating()
 {
 	cout << "Testing of vectors:" << endl;
 	cout << "Constructor with parameters(2):" << endl;
-	TVector<double> Vector1(3, 2);
+	TVector<double> Vector1(3, 0);
 	cout << "Enter Vector1 of 3 elements" << endl;
 	cin >> Vector1;
 	cout << "Vector1 is:" << Vector1 << endl;
@@ -33,19 +33,20 @@ void Equality()
 {
 	cout << "Equal vectors" << endl;
 	TVector<double> Vector1(3);
-	cout << "Vector1 is 1,2,3, enter :" << endl;
+	cout << "Vector1 is (1,2,3) enter it :" << endl;
 	cin >> Vector1;
 	TVector<double> Vector2(3);
-	cout << "Vector2 is 1,2,3, enter :" << endl;
+	cout << "Vector2 is (13,22,11) enter it :" << endl;
 	cin >> Vector2;
 	Vector1 = Vector2;
-	cout << "Vector1 is:" << Vector1 << endl;
-	cout << "Not equal vectors" << endl;
-	TVector<double> Vector3(3);
-	cout << "Vector3 is 1,5,11, enter :" << endl;
+	cout << "Vector1 = Vector2:" << Vector1 << endl;
+
+	cout << "For vectors with different sizes: " << endl;
+	TVector<double> Vector3(5);
+	cout << "Vector3 is (1,2,3,4,5) enter :" << endl;
 	cin >> Vector3;
 	Vector1 = Vector3;
-	cout << "Vector1 is:" << Vector1 << endl;
+	cout << "Vector1 = Vector3 : " << Vector1 << endl;
 }
 void Length()
 {
@@ -53,7 +54,7 @@ void Length()
 	cout << "Enter vector size" << endl;
 	cin >> l;
 	TVector<double> Vector1(l);
-	cout << "Enter Vector1 of " << l << "elements" << endl;
+	cout << "Enter Vector1 of " << l << " elements" << endl;
 	cin >> Vector1;
 	cout << "Length of Vector1 is:" << Vector1.length() << endl;
 }
@@ -72,16 +73,17 @@ void Sum_Diff()
 	double number;
 	cin >> number;
 	Vector2 = Vector2 + number;
-	cout << "Vector2+:" << number << "=" << Vector2 << endl;
+	cout << "Vector2+" << number << "=" << Vector2 << endl;
 	cout << "Difference with number:" << endl << "Enter number:" << endl;
 	int nnumber;
 	cin >> nnumber;
 	Vector2 = Vector2 - nnumber;
-	cout << "Vector2-:" << nnumber << "=" << Vector2 << endl;
-	cout << "Sum with vectors:" << Vector2 + Vector1 << endl;
-	cout << "Diff of vectors:" << Vector2 - Vector1 << endl;
+	cout << "Vector2-" << nnumber << "=" << Vector2 - nnumber << endl;
+	cout << "Vector2+Vector1:" << Vector2 + Vector1 << endl;
+	cout << "Vector2-Vector1:" << Vector2 - Vector1 << endl;
 	try
 	{
+		cout << "Vector1+Vector3:" << endl;
 		Vector1 = Vector1 + Vector3;
 	}
 	catch (DifferentSizeOfVectors& e)
@@ -90,6 +92,7 @@ void Sum_Diff()
 	}
 	try
 	{
+		cout << "Vector1+Vector3:" << endl;
 		Vector1 = Vector1 - Vector3;
 	}
 	catch (DifferentSizeOfVectors& e)
@@ -117,11 +120,13 @@ void Multiplication()
 	cout << "Vector2*:" << number << "=" << Vector2 << endl;
 
 	cout << "Multiplication with vector:" << endl;
-	Vector2 = Vector2 * Vector1;
+	TVector<double>VectorRes(3);
+	VectorRes = Vector2 * Vector1;
 	cout << "Vector2*Vector1: =" << Vector2 << endl;
 
 	try
 	{
+		cout << "Vector1*Vector3" << endl;
 		Vector1 = Vector1 * Vector3;
 	}
 	catch (DifferentSizeOfVectors& e)
@@ -142,9 +147,13 @@ void Bool()
 	cin >> Vector2;
 
 	if (Vector1 == Vector2)
-		cout << "true" << endl;
+		cout << "Vector1=Vector2" << endl;
 	if (Vector1 != Vector2)
-		cout << "wrong" << endl;
+		cout << "Vector1 != Vector2 " << endl;
+	if (Vector3 == Vector2)
+		cout << "true" << endl;
+	if (Vector3 != Vector2)
+		cout << "Vector3 != Vector 2" << endl;
 }
 void Index()
 {
@@ -196,8 +205,8 @@ void Matrix_Number_Multiplication()
 	TMatrix<double> Matrix2(3);
 	cout << "Enter Matrix2:" << endl;
 	cin >> Matrix2;
-	cout << "Matrix1*Matrix2:" << Matrix1 * Matrix2 << endl;
-	cout << "Matrix1*3:" << Matrix1 * 3 << endl;
+	cout << "Matrix1*Matrix2: \n" << Matrix1 * Matrix2 << endl;
+	cout << "Matrix1*3: \n" << Matrix1 * 3 << endl;
 	cout << "Exception situation:" << endl;
 	try
 	{
@@ -237,8 +246,8 @@ void MAdd_Diff_Matrix()
 		TMatrix<double> Matrix2(2);
 		cout << "Enter Matrix2(2*2):" << endl;
 		cin >> Matrix2;
-		cout << "Matrix1+Matrix2:" << endl << Matrix1 + Matrix2 << endl;
-		cout << "Matrix1-Matrix2" << endl << Matrix1 - Matrix2 << endl;
+		cout << "Matrix1+Matrix2: \n" << endl << Matrix1 + Matrix2 << endl;
+		cout << "Matrix1-Matrix2 \n" << endl << Matrix1 - Matrix2 << endl;
 	}
 	catch (DifferentSizeMatrix& n)
 	{
@@ -246,7 +255,7 @@ void MAdd_Diff_Matrix()
 	}
 
 }
-void MandV()//переделать в double
+void MandV()
 {
 	cout << "Matrix * Vector:" << endl;
 	cout << "NormaL situation :" << endl;
@@ -256,8 +265,9 @@ void MandV()//переделать в double
 	TVector<double> Vector1(3);
 	cout << "Enter Vector1 of 3 elements" << endl;
 	cin >> Vector1;
-	cout << "Matrix1*Vector1:" << endl << Matrix1*Vector1;
-	cout << "Exception situation:" << endl;
+	TVector<double>result(3);
+	result = Matrix1 * Vector1;
+	cout << "Matrix1*Vector1:\n" << endl << result << endl;
 	try
 	{
 		cout << "Exception situation:" << endl;
@@ -267,7 +277,7 @@ void MandV()//переделать в double
 		TVector<double> Vector2(4);
 		cout << "Enter Vector2 of 4 elements" << endl;
 		cin >> Vector1;
-		cout << "Matrix2*Vector2:" << endl << Matrix2 * Vector2;
+		cout << "Matrix2*Vector2:\n" << endl << Matrix2 * Vector2;
 	}
 	catch (DifferentSizeMatrix& n)
 	{
@@ -304,6 +314,7 @@ int main()
 		}
 		case 4:
 		{
+			cout << "Length";
 			Length();
 			break;
 		}
@@ -357,4 +368,3 @@ int main()
 		}
 	} while (n != 13);
 }
-
