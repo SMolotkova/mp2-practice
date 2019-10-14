@@ -43,14 +43,15 @@ public:
 		return in;
 	}
 
-	friend ostream& operator << (ostream& out, const TVector<ValueType>& v)//посмотреть ввод с шириной и выравниванием
+	friend ostream& operator << (ostream& out, const TVector<ValueType>& v)
 	{
 		out << "[";
 		for (int j = 0; j < v.startindex; j++)
-			cout << "  ";
+			out << setw(5) << setprecision(2) << right << int(0) << " ";
+			//out << "  ";
 		for (int i = 0; i < v.size; i++)
 		{
-			out << v.arr[i] << " ";
+			out << setw(5) << setprecision(2) << right << v.arr[i] << " ";
 		}
 		out << "]";
 		return out;
@@ -80,7 +81,7 @@ TVector<ValueType>::TVector(const TVector<ValueType>& tmp)
 
 template<typename ValueType>
 TVector<ValueType>::~TVector()
-{	
+{
 	delete[] arr;
 }
 
@@ -102,12 +103,9 @@ TVector<ValueType>& TVector<ValueType>::operator=(const TVector<ValueType>& tmp)
 }
 
 template<typename ValueType>
-double TVector<ValueType>::length() const// через скалярное
-{	
-	ValueType rez = 0;
-	for (int i = 0; i < this->size; i++)
-		rez += this->arr[i] * this->arr[i];
-	return sqrt(rez);
+double TVector<ValueType>::length() const
+{
+	return sqrt((*this) * (*this));
 }
 
 template<typename ValueType>
