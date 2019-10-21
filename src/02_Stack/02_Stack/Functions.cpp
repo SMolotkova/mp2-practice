@@ -1,5 +1,9 @@
 #include "Header.h"
 #include "Stack.h"
+#include "Exceptions.h"
+#include <string>
+#include <iostream>
+
 using namespace std;
 
 int myCalculator :: Priority(char operation) // maybe by if
@@ -19,23 +23,22 @@ int myCalculator :: Priority(char operation) // maybe by if
 		return 2;
 		break;
 	default:
-		cout << "Wrong Operation!";
+		cout << "Wrong operation!";
 		break;
 	}
 }
 bool myCalculator::Compare_of_signs(char tmp, TStack<char>& sign)
 {
-	if (Priority(sign.arr[sign.top - 1]) < Priority(tmp))
+	if (Priority(sign.arr[sign.top - 1]) < Priority(tmp))//Priority(sign.Pop())<...
 		return true;//move to another stack
 	else
 		return false;//left here
 }
-char*  myCalculator::PostfixForm(char* your_expression, int &lengs_of_postfix_form)
+string  myCalculator::PostfixForm(string your_expression)
 {
-	TStack<char> Signs(10);
-	TStack<char> Operands(10);
-	const char* expression = your_expression;
-	char expression_size = strlen(your_expression);//ìîæåò íå ÷àð?
+	TStack<char> Signs(your_expression.length() + 1);
+	TStack<char> Operands(your_expression.length() + 1);
+	int expression_size = your_expression.length();//ïðîáîâàòü â èíò
 
 	for (int i = 0; i < expression_size; i++)
 	{
@@ -43,7 +46,15 @@ char*  myCalculator::PostfixForm(char* your_expression, int &lengs_of_postfix_fo
 		if ((your_expression[i] == '*') || (your_expression[i] == '/') ||
 			(your_expression[i] == '+') || (your_expression[i] == '-'))
 		{
-			if (Compare_of_signs(your_expression[i], Signs)) // compare of top signs
+			if (your_expression[i] == ' ')//space
+				continue;
+			if (Signs.IsEmpty())
+			{
+				Signs.Push(your_expression[i]);
+				continue;
+			}
+
+			if (Compare_of_signs(your_expression[i], Signs)) // compare of top signs(top and came)
 			{
 				while (Signs.top != 0)
 					Operands.Push(Signs.Pop());
@@ -61,7 +72,7 @@ char*  myCalculator::PostfixForm(char* your_expression, int &lengs_of_postfix_fo
 			Operands.Push(your_expression[i]);
 
 
-		if (your_expression[i] == ')')
+		if (your_expression[i] == ')')//ÍÀÄÎ ËÈ ÌÅÍßÒÜ ÈËÈ ÒÀÊ ÐÀÁÎÒÀÅÒ
 			while (Signs.top != 0)
 			{
 				if (Signs.arr[Signs.top - 1] != '(')
@@ -75,27 +86,29 @@ char*  myCalculator::PostfixForm(char* your_expression, int &lengs_of_postfix_fo
 	};
 	//at the end
 	while (!Signs.IsEmpty())
-		Operands.Push(Signs.Pop());
-	char tmp[10];
-	for (int i = 0; i < Operands.size; i++)
-		tmp[i] = Operands.arr[i];
-	cout << "Postfix form is: " << tmp << endl;
+		Operands.Push(Signs.Pop());//ÍÓÆÍÎ ËÈ ÒÓÒ ÄÎÏÈÑÀÒÜ 
+	string postfix_form;
+	while (!Operands.IsEmpty())
+	{
+		postfix_form += Operands.Pop(); //È ÒÓÒ
+	}
 
-	lengs_of_postfix_form = Operands.top;
+	for (int i = 0; i < postfix_form.length() / 2; i++)
+		swap(postfix_form[i], postfix_form[postfix_form.length() - 1 - i]);
 
-	return tmp;
+	return postfix_form;
 }
-double myCalculator :: Calculate(char PostfixForm[], int lengs_of_postfix_form)
+double myCalculator :: Calculate(string postfix_form)
 {
 	int Post[10];
-	for (int i = 0; i < lengs_of_postfix_form; i++)
-		Post[i] = PostfixForm[i];
+	for (int i = 0; i < postfix_form.length(); i++)
+		Post[i] = postfix_form[i];
 
 	TStack<float> Signs(10);
 	TStack<char> Operands(10);
-	char length = lengs_of_postfix_form;
-	float a = 0, b = 0;
-	float count = 0;
+	int length = postfix_form.length();
+	int a = 0, b = 0;
+	int count = 0;
 
 	for (int i = 0; i < length; i++)
 	{
