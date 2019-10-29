@@ -13,13 +13,24 @@ int main()
 {
 	SetStyle_PurpleBlue();
 	string your_expression;
+	string postfix_form;
+	string letters;
 
 	cout << "\t\t\t\tMY CALCULATOR\n" << "Enter your expression:";
-
 	getline(cin, your_expression);
+
 	cout << "\n  Postfix Form is: " << myCalculator::PostfixForm(your_expression) << endl;
-	int amount = myCalculator::Calculate(myCalculator::PostfixForm(your_expression));
-	cout << "Reasult is: "<< amount;
+
+	postfix_form = myCalculator::PostfixForm(your_expression);
+	try
+	{
+		double amount = myCalculator::Calculate(postfix_form);
+		cout << "Result is: " << amount;
+	}
+	catch (WrongDivision& e)
+	{
+		cout << e.what();
+	}
 	int f;
 	cin >> f;
 }
