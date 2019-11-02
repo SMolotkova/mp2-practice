@@ -30,17 +30,24 @@ public:
 	void InsertBefore(TKey, TData*, TKey);
 	void Remove(TKey);
 
-	
-	void Print()const
+
+	void Print()
 	{
-		TNode<TData, TKey>* Curr = pFirst;
+		/*TNode<TData, TKey>* Curr = pFirst;
 		while (Curr)
 		{
 			cout << Curr->key << "-" << *Curr->pData << endl;
-			/*for (int i = 0; i < 10; i++)
-				cout << *Curr->pData << " ";*/
 			Curr = Curr->pNext;
+		}*/
+		
+		TNode<TData, TKey>* Curr = pFirst;
+		while (!IsEnd())
+		{
+			cout << Curr->key <<"-"<< *Curr->pData << ' ';
+			Next();
 		}
+		//cout << *pCurr->pData;
+		//return;
 	}
 
 };
@@ -89,7 +96,7 @@ TList<TData, TKey>::~TList()
 }
 
 template<class TData, class TKey>
-bool TList<TData, TKey>::IsEnd() 
+bool TList<TData, TKey>::IsEnd()
 {
 	return pCurr = nullptr;
 }
@@ -97,8 +104,8 @@ bool TList<TData, TKey>::IsEnd()
 template<class TData, class TKey>
 void TList<TData, TKey>::Reset()
 {
-	pPrev = nullptr;
 	pCurr = pFirst;
+	pPrev = nullptr;
 	if (pFirst != 0)
 		pNext = pCurr->pNext;
 	else
@@ -123,7 +130,7 @@ void TList<TData, TKey>::Back(TData* _pData, TKey _key)
 	while (!IsEnd())
 		Next();
 
-	TNode<TData, TKey>* node = new TNode<TData, TKey>(_pData,_key );
+	TNode<TData, TKey>* node = new TNode<TData, TKey>(_pData, _key);
 	pCurr->pNext = node;
 	Reset();
 }
@@ -168,7 +175,7 @@ void TList<TData, TKey>::InsertAfter(TKey key, TData* _pData, TKey newKey)
 	if (node == nullptr)
 		throw "  Key didn't find";
 
-	TNode<TData, TKey>* _node = new TNode<TData, TKey>(key, _pData);
+	TNode<TData, TKey>* _node = new TNode<TData, TKey>( _pData, key);
 	pPrev = pCurr;
 	pCurr = node;
 
@@ -183,7 +190,7 @@ void TList<TData, TKey>::InsertBefore(TKey key, TData* _pData, TKey newKey)
 
 	if (IsEnd())
 	{
-		Push(newKey, _pData);
+		Push( _pData, newKey);
 		return;
 	}
 
