@@ -31,22 +31,16 @@ public:
 	void Remove(TKey);
 
 
-	void Print()
+	friend ostream& operator << (ostream& out, TList<TData,TKey>& list)
 	{
-		TNode<TData,TKey>* Curr= pFirst;
-		int size_of_pData = sizeof(Curr->pData) / sizeof(Curr->pData[0]);
-		//while (Curr != nullptr)
-		//{
-			//cout << Curr->key << "-" << endl;
-			//for (int i = 0; i < size_of_pData; i++)
-			//{
-			//	cout <<"op"<< (Curr->pData)[i];
-			//};
-			cout << "size" << size_of_pData;
-			//Curr = Curr->pNext;
-		//}
+		list.Reset();
+		while (!list.IsEnd())
+		{
+			out << list.pCurr->key << "-" << *list.pCurr->pData << endl;
+			list.Next();
+		}
+		return out;
 	}
-
 };
 
 template<class TData, class TKey>
@@ -55,29 +49,26 @@ TList<TData, TKey>::TList() : pFirst(nullptr), pPrev(nullptr), pCurr(nullptr), p
 template<class TData, class TKey>
 TList<TData, TKey>::TList(const TNode<TData, TKey>* pNodeElem)
 {
-	/*pFirst = pNodeElem;
-	pPrev = nullptr;
-	pCurr = pFirst;
-	pNext = nullptr;*/
-	TNode<TKey, TData> node(pNodeElem);
-	while (node.pNext != nullptr)
+
+	TNode<TKey, TData> *node = pNodeElem;
+	while (node->pNext != nullptr)
 	{
 		if (pFirst == nullptr)
 		{
-			pCurr = new TNode<TKey, TData>(node.key, node.pData);
+			pCurr = new TNode<TKey, TData>(node->key, node->pData);
 			pFirst = pCurr;
 			pPrev = nullptr;
 		}
 		else
 		{
 			pPrev = pCurr;
-			pCurr = new TNode<TKey, TData>(node.key, node.pData);
+			pCurr = new TNode<TKey, TData>(node->key, node->pData);
 			pPrev->pNext = pCurr;
 		}
-		node = node.pNext;
+		node = node->pNext;
 	}
 	pPrev = pCurr;
-	pCurr = new TNode<TKey, TData>(node.key, node.pData);
+	pCurr = new TNode<TKey, TData>(node->key, node->pData);
 	pPrev->pNext = pCurr;
 	pNext = nullptr;
 	Reset();
@@ -85,36 +76,28 @@ TList<TData, TKey>::TList(const TNode<TData, TKey>* pNodeElem)
 
 template<class TData, class TKey>
 TList<TData, TKey>::TList(const TList<TData, TKey>& copyList)
-{/*
-	copyList.Reset();
-	while (!copyList.IsEnd())
-	{
-		Back(pCurr->pData, pCurr->key);
-		copyList.Next();
-	}
-	Reset();*/
-
+{
 	if (copyList.pCurr != copyList.pFirst)
 		throw "";
-	TNode<TData, TKey> node(copyList.pCurr);
-	while (node.pNext != nullptr)
+	TNode<TData, TKey> *node = copyList.pCurr;
+	while (node->pNext != nullptr)
 	{
 		if (pFirst == nullptr)
 		{
-			pCurr = new TNode<TData, TKey>(node.key, node.pData);
+			pCurr = new TNode<TData, TKey>(node->key, node->pData);
 			pFirst = pCurr;
 			pPrev = nullptr;
 		}
 		else
 		{
 			pPrev = pCurr;
-			pCurr = new TNode<TData, TKey>(node.key, node.pData);
+			pCurr = new TNode<TData, TKey>(node->key, node->pData);
 			pPrev->pNext = pCurr;
 		}
-		node = node.pNext;
+		node = node->pNext;
 	}
 	pPrev = pCurr;
-	pCurr = new TNode<TData,TKey>(node.key, node.pData);
+	pCurr = new TNode<TData,TKey>(node->key, node->pData);
 	pPrev->pNext = pCurr;
 	pNext = nullptr;
 	Reset();
@@ -173,7 +156,7 @@ void TList<TData, TKey>::Back(TData* _pData, TKey _key)
 		pFirst = pCurr;
 		pFirst->pData = new TData;
 		*(pFirst->pData) = *_pData;
-		pFirst->key =_key;
+		pFirst->key = _key;
 		pFirst->pNext = nullptr;
 	}
 	else
@@ -209,11 +192,12 @@ TNode<TData, TKey>* TList<TData, TKey>::Search(TKey key)
 template<class TData, class TKey>
 void TList<TData, TKey>::Push(TData* _pData, TKey _key)
 {
-	Reset();
-	TNode<TData, TKey>* node = new TNode<TData, TKey>(_key, _pData);
-	pNext = pFirst;
+	TNode<TKey, TData>* node = new TNode<TData, TKey>;
+	node->pData = new TData;
+	*(node->pData) = *_pData;
+	node->key = _key;
+	node->pNext = pFirst;
 	pFirst = node;
-	pCurr = pFirst;
 	Reset();
 }
 
