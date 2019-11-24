@@ -1,36 +1,23 @@
-#include "Stack.h"
-#include "Header.h"
-#include "Exceptions.h"
-#include <cstdio>
 #include <iostream>
 #include <string>
-#include<windows.h>
+#include "header.h"
+#include "stack.h"
+#include "exceptions.h"
 using namespace std;
 
-void SetStyle_PurpleBlue() { const int NotUsed = system("color 37"); }
-
-int main()
+void main() 
 {
-	SetStyle_PurpleBlue();
 	string your_expression;
-	string postfix_form;
-	string letters;
-
-	cout << "\t\t\t\tMY CALCULATOR\n" << "Enter your expression:";
-	getline(cin, your_expression);
-
-	cout << "\n  Postfix Form is: " << myCalculator::PostfixForm(your_expression) << endl;
-
-	postfix_form = myCalculator::PostfixForm(your_expression);
-	try
-	{
-		double amount = myCalculator::Calculate(postfix_form);
-		cout << "Result is: " << amount;
-	}
-	catch (WrongDivision& e)
-	{
-		cout << e.what();
-	}
-	int f;
-	cin >> f;
+	string operands;
+	
+		cout << "\t\t\t\tMY CALCULATOR\n" << "Enter your expression:";
+		getline(cin, your_expression);
+		string postfix_form = myCalculator::PostfixForm(your_expression);
+		cout << "Postfix form is:" << postfix_form << endl;
+		int count = myCalculator::Count(postfix_form);
+		double* values = new double[count];
+		myCalculator::GettingValues(values, operands, postfix_form, count);
+		double result = myCalculator::Calculate(values, operands, postfix_form);
+		cout << "Result is: " << result << endl;
+	system("pause");
 }
