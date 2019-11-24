@@ -1,5 +1,5 @@
 #pragma once
-#include "Exceptions.h"
+#include "exceptions.h"
 #include <iostream>
 using namespace std;
 
@@ -22,8 +22,6 @@ public:
 	void Push(ValueType next);
 	ValueType Top() const;
 	void Pop();
-	ValueType Getlast()const;
-	ValueType Top1() const;
 };
 
 
@@ -76,7 +74,7 @@ void TStack<ValueType>::Push(ValueType next)
 }
 
 template<class ValueType>
-ValueType TStack<ValueType>::Top() const//GETLAST
+ValueType TStack<ValueType>::Top() const
 {
 	if (IsEmpty())
 		throw EmptyStack();
@@ -89,14 +87,4 @@ void TStack<ValueType>::Pop()
 	if (IsEmpty())
 		throw EmptyStack();
 	top--;
-}
-template<class ValueType>
-ValueType TStack<ValueType>::Getlast()const //или топ!!!!!! сам элемент
-{
-	return arr[top - 1];
-}
-template<class ValueType>
-ValueType TStack<ValueType>::Top1() const
-{
-	return top;
 }
