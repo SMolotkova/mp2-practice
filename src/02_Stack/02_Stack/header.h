@@ -1,29 +1,25 @@
 #include <iostream>
 #include <string>
-#include "stack.h"
-#include "exceptions.h"
+#include "Stack.h"
+#include "Exceptions.h"
 using namespace std;
 
-class myCalculator
+class myCalculator 
 {
 private:
-	static int Priority(const char);//приоретет операций
-	static bool Comparison(char, TStack<char>&);//сравнение приоритетов
+	static int Priority(const char sign);//определение приоретета операций
+	static bool Comparison(char expression, TStack<char>& top);//сравнение приоритетов
 	static bool IsItOperation(const char);//определение операция это или нет
 public:
-	static string PostfixForm(string);//создание постфиксной формы
-	static void GettingValues(string, char* &, double* &, int &);//ввод значений
-	static double Calculate(string, char*, double*, int);//полученное значение
-
-	static int Count(string);//количество операндов в прайвит
-	//static double Calculate(double*, string&, string);//полученное значение
-	//static void GettingValues(double*, string&, string, int);//ввод значений
+	static string PostfixForm(string);//образование постфиксной формы
+	static double Calculate(string postfix_form, char* operands, double* values, int count_of_operands);//возвращает результат подсчета
+	static void GettingOperands(string postfix_form, char* &operands, double* &values, int &count_of_operands);
 };
 
 
-int myCalculator::Priority(const char sign)
+int myCalculator::Priority(const char sign) 
 {
-	switch (sign)
+	switch (sign) 
 	{
 	case '+': return 2;
 	case '-': return 2;
@@ -32,87 +28,78 @@ int myCalculator::Priority(const char sign)
 	default: return 3;
 	}
 }
-bool myCalculator::Comparison(char expression, TStack<char>& topElem)
-{
-	return (Priority(topElem.Top()) < Priority(expression));
-}
+bool myCalculator::Comparison(char expression, TStack<char>& top) 
+{	
+	return (Priority(top.Top()) < Priority(expression));
+};
 
-bool myCalculator::IsItOperation(const char sign)
+bool myCalculator::IsItOperation(const char sign) 
 {
 	return ((sign == '*') || (sign == '/') || (sign == '+') || (sign == '-'));
 }
 
-int myCalculator::Count(string postfix_form)
-{
-	int count = 0;
-	for (int i = 0; i < postfix_form.length(); i++)
+void myCalculator::GettingOperands(string p_f, char*& operands, double*& values, int& count) {
+	for (int i = 0; i < p_f.length(); i++) 
 	{
-		if (isalpha(postfix_form[i]))
+		if (isalpha(p_f[i])) 
 		{
 			count++;
 		}
 	}
-	return count;
-}
-//ввод значений
-void myCalculator::GettingValues(double* values, string& operands, string postfix_form, int count)
-{
 	int current_count_of_operands = 0;
 	double value = 0;
-	char* new_operands = new char[count];
-	double* new_values = new double[count];
-	for (int i = 0; i < postfix_form.length(); i++)
+	operands = new char[count];
+	values = new double[count];
+	for (int i = 0; i < p_f.length(); i++) 
 	{
-		if (isalpha(postfix_form[i]))
+		if (isalpha(p_f[i])) 
 		{
 			int flag = 0;
-			for (int j = 0; j < current_count_of_operands; j++)
+			for (int j = 0; j < current_count_of_operands; j++) 
 			{
-				if (new_operands[j] == postfix_form[i])
+				if (operands[j] == p_f[i]) 
 				{
 					flag = 1;
 					break;
 				}
 			}
-			if (flag == 0)
+			if (flag == 0) 
 			{
-				new_operands[current_count_of_operands] = postfix_form[i];
-				cout << "Enter value " << postfix_form[i] << endl;
+				operands[current_count_of_operands] = p_f[i];
+				cout << "Enter value of " << p_f[i] << endl;
 				cin >> value;
-				new_values[current_count_of_operands] = value;
+				values[current_count_of_operands] = value;
 				current_count_of_operands++;
 			}
 		}
 	}
-	operands.assign(new_operands);
-	memcpy(values, new_values, sizeof(double) * count);
 }
 
-string myCalculator::PostfixForm(string your_expression)
-{
-	if (your_expression.length() == 0)
+
+string myCalculator::PostfixForm(string exp) {
+	if (exp.length() == 0) 
 	{
-		throw "Wrong string\n";
+		throw "Wrong string!\n";
 	}
-	TStack<char> stack1(your_expression.length() + 1);//операции
-	TStack<char> stack2(your_expression.length() + 1);//операнды
-	for (int i = 0; i < your_expression.length(); i++)
+	TStack<char> stack1(exp.length() + 1);//операции
+	TStack<char> stack2(exp.length() + 1);//операнды
+	for (int i = 0; i < exp.length(); i++) 
 	{
-		char sign = static_cast<char>(your_expression[i]);
-		if (sign == ' ')
+		char sign = static_cast<char>(exp[i]);
+		if (sign == ' ') 
 		{
 			continue;
 		}
-		if (IsItOperation(sign))
+		if (IsItOperation(sign)) 
 		{
-			if (stack1.IsEmpty())
-			{ 
+			if (stack1.IsEmpty()) 
+			{
 				stack1.Push(sign);
 				continue;
 			}
-			if (Comparison(sign, stack1))
+			if (Comparison(sign, stack1)) 
 			{
-				while (!stack1.IsEmpty())
+				while (!stack1.IsEmpty()) 
 				{
 					stack2.Push(stack1.Top());
 					stack1.Pop();
@@ -123,22 +110,21 @@ string myCalculator::PostfixForm(string your_expression)
 				stack1.Push(sign);
 		}
 
-		if (sign == '(')
+		if (sign == '(') 
 		{
 			stack1.Push(sign);
 		}
-		if (isalpha(sign))
+		if (isalpha(sign)) 
 		{
 			stack2.Push(sign);
 		}
-		if (sign == ')')
+		if (sign == ')') 
 		{
 			int left_bracket_flag = 0;
-			while (!stack1.IsEmpty())
+			while (!stack1.IsEmpty()) 
 			{
-				if (stack1.Top() != '(')
+				if (stack1.Top() != '(') 
 				{
-					cout << stack1.Top() << endl;
 					stack2.Push(stack1.Top());
 					stack1.Pop();
 					continue;
@@ -147,21 +133,21 @@ string myCalculator::PostfixForm(string your_expression)
 				left_bracket_flag = 1;
 				break;
 			}
-			if ((left_bracket_flag != 1) && (stack1.IsEmpty()))
+			if ((left_bracket_flag != 1) && (stack1.IsEmpty())) 
 			{
-				throw " Need ) or (\n";
+				throw "Error";
 			}
 		}
 
 	}
-	while (!stack1.IsEmpty())
+	while (!stack1.IsEmpty()) 
 	{
 		stack2.Push(stack1.Top());
 		stack1.Pop();
 	}
 	string postfix_form;
 
-	while (!stack2.IsEmpty())
+	while (!stack2.IsEmpty()) 
 	{
 		postfix_form += stack2.Top();
 		stack2.Pop();
@@ -173,51 +159,49 @@ string myCalculator::PostfixForm(string your_expression)
 	return postfix_form;
 }
 
-
-double myCalculator::Calculate(double* values, string& operands, string postfix_form)
+double myCalculator::Calculate(string p_f, char* operands, double* values, int count)
 {
-	TStack<double> result(postfix_form.length());
-	for (int i = 0; i < postfix_form.length(); i++)
-	{
-		char sign = static_cast<char>(postfix_form[i]);
-		if (isalpha(sign))
-		{
-			for (int j = 0; j < operands.length(); j++)
-			{
-				if (operands[j] == sign)
-				{
-					result.Push(values[j]);
+	TStack<double> resulting_mas(p_f.length());
+	for (int i = 0; i < p_f.length(); i++) {
+		char sign = static_cast<char>(p_f[i]);
+		if (isalpha(sign)) {
+			for (int j = 0; j < count; j++) {
+				if (operands[j] == sign) {
+					resulting_mas.Push(values[j]);
 					break;
 				}
 			}
 			continue;
 		}
-
-		double first = result.Top();
-		result.Pop();
-		double second = result.Top();
-		result.Pop();
-		double res;
-
-		switch (sign)
+		else
 		{
-		case '+':
-			res = second + first;
-			break;
-		case '-':
-			res = second - first;
-			break;
-		case '*':
-			res = second * first;
-			break;
-		case '/':
-			if (first == 0)
-				throw "Divisin by 0!\n";
-			res = second / first;
-			break;
-		}
+			double first = resulting_mas.Top();
+			resulting_mas.Pop();
+			double second = resulting_mas.Top();
+			resulting_mas.Pop();
+			double result;
 
-		result.Push(res);
+			switch (sign) {
+			case '+':
+				result = second + first;
+				break;
+			case '-':
+				result = second - first;
+				break;
+			case '*':
+				result = second * first;
+				break;
+			case '/':
+				if (first == 0)
+					throw "Wrong Division!\n";
+				result = second / first;
+				break;
+			}
+
+			resulting_mas.Push(result);
+		}
 	}
-	return result.Top();
+	return resulting_mas.Top();
 };
+
+
