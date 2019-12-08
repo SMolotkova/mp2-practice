@@ -12,8 +12,9 @@ void BackTest()
 	for (int i = 0; i < 10; i++)
 	{
 		list.Back((a + i), i);
+		cout << list<<endl;
 	}
-	list.Print();
+	cout << list;
 };
 void CopyingConstructorTest()
 {
@@ -25,10 +26,10 @@ void CopyingConstructorTest()
 	{
 		list.Back((a + i), i);
 	}
-	list.Print();
+	cout << list;
 	cout << "Second list s:" << endl;
 	TList<double, double> copyList(list);
-	copyList.Print();
+	cout << copyList;
 };
 void RemoveTest()
 {
@@ -38,12 +39,13 @@ void RemoveTest()
 	for (int i = 0; i < 10; i++)
 	{
 		list.Back((a + i), i);
+		cout << list << endl;
 	}
 	cout << "List is:" << endl;
-	list.Print();
+	cout << list;
 	list.Remove(1);
 	cout << "List after removing element with 1st key:" << endl;
-	list.Print();
+	cout << list;
 }
 void PushTest()
 {
@@ -55,11 +57,11 @@ void PushTest()
 		list.Back((a + i), i);
 	}
 	cout << "List before Push" << endl;
-	list.Print();
+	cout << list;
 	cout << "List after Push" << endl;
-	double* b = new double[3]{ 1,2,3};
+	double* b = new double[3]{ 1,2,3 };
 	list.Push(b, 23);
-	list.Print();
+	cout << list;
 };
 void InsertAfterTest()
 {
@@ -69,13 +71,14 @@ void InsertAfterTest()
 	for (int i = 0; i < 10; i++)
 	{
 		list.Back((a + i), i);
+		cout << list << endl;
 	}
 	cout << "List before InsertA:" << endl;
-	list.Print();
+	cout << list;
 	cout << "List after InsertA:" << endl;
-	double* b = new double[3]{ 99,2,3 };
+	double* b = new double{99};
 	list.InsertAfter(8, b, 11);
-	list.Print();
+	cout << list;
 };
 void InsertBeforeTest()
 {
@@ -85,13 +88,14 @@ void InsertBeforeTest()
 	for (int i = 0; i < 10; i++)
 	{
 		list.Back((a + i), i);
+		cout << list << endl;
 	}
 	cout << "List before Insert:" << endl;
-	list.Print();
+	cout << list;
 	cout << "List after InsertB:" << endl;
-	double* b = new double[3]{ 99,2,3 };
-	list.InsertBefore(8, b, 11);
-	list.Print();
+	double* b = new double{99};
+	list.InsertBefore(2, b, 11);
+	cout << list;
 };
 int main()
 {
@@ -100,7 +104,7 @@ int main()
 	{
 
 		cout << "Choose" << endl << "1-BackTest" << endl << "2-CopyingConstructorTest" << endl << "3- RemoveTest" << endl << "4- PushTest" << endl << "5-InsertAfterTest" << endl;
-		cout << "6-InsertBeforeTest"<< endl;
+		cout << "6-InsertBeforeTest" << endl;
 		cin >> n;
 		switch (n)
 		{
@@ -136,7 +140,7 @@ int main()
 		}
 		case 7:
 		{
-			double* a = new double[10]{ 1,2,3,4,5,6,7,8,9,10};
+			double* a = new double[10]{ 1,2,3,4,5,6,7,8,9,10 };
 			for (int i = 0; i < 10; i++)
 			{
 				cout << a[i];
@@ -149,5 +153,5 @@ int main()
 			cout << "Wrong number";
 		}
 	} while (n != 7);
-	
+
 }
