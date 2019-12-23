@@ -174,37 +174,56 @@ TNode<TData, TKey>* TList<TData, TKey>::Search(TKey key)
 template<class TData, class TKey>
 void TList<TData, TKey>::Push(TData* _pData, TKey _key)
 {
-	TNode<TKey, TData>* node = new TNode<TData, TKey>(_key, _pData, pFirst);
-	if (pCurr == pFirst)
+	if (pFirst == nullptr) 
 	{
+		pFirst = new TNode<TData, TKey>(_key, _pData);
+		pCurr = pFirst;
+		return;
+	};
+	TNode<TData, TKey>* node = new TNode<TData, TKey>(_key, _pData, pFirst);
+	if (pCurr == pFirst)
 		pPrev = node;
-	}
 	pFirst = node;
 }
 
 template<class TData, class TKey>
-void TList<TData, TKey>::InsertAfter(TKey key, TData* _pData, TKey newKey)
+void TList<TData, TKey>::InsertAfter(TKey _key, TData* _pData, TKey newKey)
 {
-	if (pFirst == NULL)
-		throw "Error";
-	TNode<TData,TKey>* pprev = pPrev;
-	TNode<TData, TKey>* pcurr = pCurr;
-	TNode<TData, TKey>* pnext = pNext;
+	TNode<TData, TKey>* tmppCurrent = pCurr;
+	TNode<TData, TKey>* tmppNext = pNext;
+	TNode<TData, TKey>* tmppPrev = pPrev;
+	this->Reset();
+	TNode<TData, TKey>* node_search = Search(_key);
 
-	TNode<TData, TKey>* searchnode = new TNode<TData, TKey>();
-	searchnode = Search(key);
-	if (searchnode == 0)
+	if (!node_search) 
 	{
-		pPrev = pprev;
-		pCurr = pcurr;
-		pNext = pnext;
-		return;
+		throw "Key does not exist";
 	}
-	TNode<TData, TKey>* tmp = new TNode<TData, TKey>(key, _pData, searchnode->pNext);
-	searchnode->pNext = tmp;
-	pPrev = pprev;
-	pCurr = pcurr;
-	pNext = pnext;
+
+	while (pCurr != node_search)
+		this->Next();
+
+	TNode<TData, TKey>* node = new TNode<TData, TKey>(newKey, _pData, pNext);
+	pCurr->pNext = node;
+
+	if (tmppCurrent == pCurr) 
+	{
+		pNext = node;
+	}
+	else 
+	{
+		pNext = tmppNext;
+	}
+	if (tmppCurrent == pNext) 
+	{
+		pPrev = node;
+	}
+	else 
+	{
+		pPrev = tmppPrev;
+	}
+
+	pCurr = tmppCurrent;
 }
 
 template<class TData, class TKey>
@@ -237,100 +256,77 @@ void TList<TData, TKey>::InsertBefore(TKey key, TData* _pData, TKey newKey)//dod
 	}
 };
 
-template<class TData, class TKey>
-void TList<TData, TKey>::Remove(TKey _key)
-{
-	TNode<TData, TKey>* pprev = pPrev;
-	TNode<TData, TKey>* pcurr = pCurr;
-	TNode<TData, TKey>* pnext = pNext;
 
-	if (pCurr != pFirst)
-		Reset();
-	
-	while (!IsEnd() && (pCurr->key != _key))
-		Next();
-	if (pCurr == pFirst)
-		pFirst = pCurr->pNext;
-	else
-		pPrev->pNext = pCurr->pNext;
-	delete[] pCurr;
-	pCurr = nullptr;
-	pPrev = pprev;
-	pCurr = pcurr;
-	pNext = pnext;
-}
-///////////////////////////////////////////////////////////////////////////////////////
-template<class TKey, class TData>//done
-void TList<TData, TKey>::Remove(TKey _key) 
+template<class TData, class TKey>
+void TList<TData, TKey>:: Remove(TKey _key)
 {
 	if (!pFirst)
-		throw Exception("List is empty");
-	if (pFirst->key == _key) 
+		throw "List is empty";
+	if (pFirst->key == _key)
 	{
-		if (pCurrent == pFirst) 
+		if (pCurr == pFirst)
 		{
-			pCurrent = pNext;
-			if (pNext) 
+			pCurr = pNext;
+			if (pNext)
 			{
 				pNext = pNext->pNext;
 			}
-			else 
+			else
 			{
 				pNext = NULL;
 			}
 			delete pFirst;
-			pFirst = pCurrent;
+			pFirst = pCurr;
 			return;
 		}
 
-		if (pCurrent == pFirst->pNext) 
+		if (pCurr == pFirst->pNext)
 		{
 			pPrev = NULL;
 			delete pFirst;
-			pFirst = pCurrent;
+			pFirst = pCurr;
 			return;
 		}
 		delete pFirst;
 		return;
 	}
-	TNode<TData, TKey>* tmppCurrent = pCurrent;
+	TNode<TData, TKey>* tmppCurrent = pCurr;
 	TNode<TData, TKey>* tmppPrev = pPrev;
 	TNode<TData, TKey>* tmppNext = pNext;
 	this->Reset();
 	TNode<TData, TKey>* node_search = Search(_key);
-	if (!node_search) 
+	if (!node_search)
 	{
-		throw Exception("The key not found");
-		return;
+		throw "The key not found";
 	}
-	while (pCurrent != node_search)
+	while (pCurr != node_search)
 		this->Next();
 	pPrev->pNext = pNext;
-	if (tmppCurrent == pCurrent) 
+	if (tmppCurrent == pCurr)
 	{
-		pCurrent = tmppNext;
-		pNext = pCurrent->pNext;
+		pCurr = tmppNext;
+		pNext = pCurr->pNext;
 		delete node_search;
 		return;
 	}
 
 	if (tmppCurrent == pPrev) {
-		pCurrent = pPrev;
+		pCurr = pPrev;
 		pPrev = tmppPrev;
-		pNext = pCurrent->pNext;
+		pNext = pCurr->pNext;
 		delete node_search;
 		return;
 	}
-	if (tmppCurrent == pNext) 
+	if (tmppCurrent == pNext)
 	{
-		pCurrent = pNext;
-		pNext = pCurrent->pNext;
+		pCurr = pNext;
+		pNext = pCurr->pNext;
 		delete node_search;
 		return;
 	}
 
 	pNext = tmppCurrent->pNext;
-	pCurrent = tmppCurrent;
+	pCurr = tmppCurrent;
 	delete node_search;
 	return;
 };
