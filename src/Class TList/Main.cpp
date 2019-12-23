@@ -4,7 +4,7 @@
 #include "TList.h"
 
 using namespace std;
-void BackTest()
+void BackTest()//+
 {
 	cout << "Testing of Back-function:" << endl;
 	TList<double, double> list;
@@ -16,22 +16,23 @@ void BackTest()
 	}
 	cout << list;
 };
-void CopyingConstructorTest()
+void CopyingConstructorTest()//+
 {
 	cout << "Testing of copying constructor:" << endl;
-	cout << "First List is:" << endl;
 	TList<double, double> list;
 	double* a = new double[10]{ 1,2,3,4,5,6,7,8,9,10 };
 	for (int i = 0; i < 10; i++)
 	{
 		list.Back((a + i), i);
+		cout << list << endl;
 	}
+	cout << "First List is:" << endl;
 	cout << list;
-	cout << "Second list s:" << endl;
+	cout << "Second list is:" << endl;
 	TList<double, double> copyList(list);
 	cout << copyList;
 };
-void RemoveTest()
+void RemoveTest()//+
 {
 	cout << "Testing of Remove-function:" << endl;
 	TList<double, double> list;
@@ -47,7 +48,7 @@ void RemoveTest()
 	cout << "List after removing element with 1st key:" << endl;
 	cout << list;
 }
-void PushTest()
+void PushTest()//+
 {
 	cout << "Testing of Push-function:" << endl;
 	TList<double, double> list;
@@ -55,6 +56,7 @@ void PushTest()
 	for (int i = 0; i < 10; i++)
 	{
 		list.Back((a + i), i);
+		cout << list << endl;
 	}
 	cout << "List before Push" << endl;
 	cout << list;
@@ -63,7 +65,7 @@ void PushTest()
 	list.Push(b, 23);
 	cout << list;
 };
-void InsertAfterTest()
+void InsertAfterTest()//+
 {
 	cout << "Testing of InsertAfter-function:" << endl;
 	TList<double, double> list;
@@ -80,7 +82,7 @@ void InsertAfterTest()
 	list.InsertAfter(8, b, 11);
 	cout << list;
 };
-void InsertBeforeTest()
+void InsertBeforeTest()//+
 {
 	cout << "Testing of InsertBefore-function:" << endl;
 	TList<double, double> list;
@@ -103,7 +105,7 @@ int main()
 	do
 	{
 
-		cout << "Choose" << endl << "1-BackTest" << endl << "2-CopyingConstructorTest" << endl << "3- RemoveTest" << endl << "4- PushTest" << endl << "5-InsertAfterTest" << endl;
+		cout << "Choose:" << endl << "1-BackTest" << endl << "2-CopyingConstructorTest" << endl << "3- RemoveTest" << endl << "4- PushTest" << endl << "5-InsertAfterTest" << endl;
 		cout << "6-InsertBeforeTest" << endl;
 		cin >> n;
 		switch (n)
@@ -138,20 +140,10 @@ int main()
 			InsertBeforeTest();
 			break;
 		}
-		case 7:
-		{
-			double* a = new double[10]{ 1,2,3,4,5,6,7,8,9,10 };
-			for (int i = 0; i < 10; i++)
-			{
-				cout << a[i];
-			};
-			int d;
-			cin >> d;
-			break;
-		}
 		default:
 			cout << "Wrong number";
 		}
-	} while (n != 7);
-
+	} while (n != 6);
+	int pause;
+	cin >> pause;
 }
