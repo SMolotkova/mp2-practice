@@ -246,17 +246,7 @@ void TList<TData, TKey>::Remove(TKey _key)
 
 	if (pCurr != pFirst)
 		Reset();
-	//if (pcurr == pCurr)
-	//{
-	//	delete pCurr;
-	//	pCurr = pnext;
-	//	pPrev->pNext = pCurr;
-	//	if (pNext->pNext != 0)
-	//	{
-	//		pNext = pNext->pNext;
-	//	}
-	//	return;
-	//}
+	
 	while (!IsEnd() && (pCurr->key != _key))
 		Next();
 	if (pCurr == pFirst)
@@ -269,3 +259,78 @@ void TList<TData, TKey>::Remove(TKey _key)
 	pCurr = pcurr;
 	pNext = pnext;
 }
+///////////////////////////////////////////////////////////////////////////////////////
+template<class TKey, class TData>//done
+void TList<TData, TKey>::Remove(TKey _key) 
+{
+	if (!pFirst)
+		throw Exception("List is empty");
+	if (pFirst->key == _key) 
+	{
+		if (pCurrent == pFirst) 
+		{
+			pCurrent = pNext;
+			if (pNext) 
+			{
+				pNext = pNext->pNext;
+			}
+			else 
+			{
+				pNext = NULL;
+			}
+			delete pFirst;
+			pFirst = pCurrent;
+			return;
+		}
+
+		if (pCurrent == pFirst->pNext) 
+		{
+			pPrev = NULL;
+			delete pFirst;
+			pFirst = pCurrent;
+			return;
+		}
+		delete pFirst;
+		return;
+	}
+	TNode<TData, TKey>* tmppCurrent = pCurrent;
+	TNode<TData, TKey>* tmppPrev = pPrev;
+	TNode<TData, TKey>* tmppNext = pNext;
+	this->Reset();
+	TNode<TData, TKey>* node_search = Search(_key);
+	if (!node_search) 
+	{
+		throw Exception("The key not found");
+		return;
+	}
+	while (pCurrent != node_search)
+		this->Next();
+	pPrev->pNext = pNext;
+	if (tmppCurrent == pCurrent) 
+	{
+		pCurrent = tmppNext;
+		pNext = pCurrent->pNext;
+		delete node_search;
+		return;
+	}
+
+	if (tmppCurrent == pPrev) {
+		pCurrent = pPrev;
+		pPrev = tmppPrev;
+		pNext = pCurrent->pNext;
+		delete node_search;
+		return;
+	}
+	if (tmppCurrent == pNext) 
+	{
+		pCurrent = pNext;
+		pNext = pCurrent->pNext;
+		delete node_search;
+		return;
+	}
+
+	pNext = tmppCurrent->pNext;
+	pCurrent = tmppCurrent;
+	delete node_search;
+	return;
+};
