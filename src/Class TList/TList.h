@@ -15,7 +15,7 @@ private:
 public:
 	TList();
 	TList(const TNode<TData, TKey>* pNodeElem);
-	TList(const TList& copyList);
+	TList(const TList<TData, TKey>& copyList);
 	~TList();
 
 	bool IsEnd()const;
@@ -28,7 +28,7 @@ public:
 	void Push(TData*, TKey);
 	void InsertAfter(TKey, TData*, TKey);
 	void InsertBefore(TKey, TData*, TKey);
-	void Remove(TKey);
+	void Remove(TKey _key);
 
 
 	friend ostream& operator << (ostream& out, TList<TData, TKey>& list)
@@ -82,12 +82,13 @@ TList<TData, TKey>::TList(const TList<TData, TKey>& copyList)
 template<class TData, class TKey>
 TList<TData, TKey>::~TList()
 {
-	while (pFirst != nullptr)
+	TNode<TData, TKey> *notnode = pFirst;
+	TNode<TData, TKey> *next;
+	while (notnode != nullptr)
 	{
-		pNext = pFirst->pNext;
-		delete (pFirst->pData);
-		delete pFirst;
-		pFirst = pNext;
+		next = notnode->pNext;
+		delete notnode;
+		notnode = next;
 	}
 }
 
@@ -108,13 +109,13 @@ void TList<TData, TKey>::Reset()
 		return;
 	}
 	pNext = pFirst->pNext;
-	return;
 }
 
 template<class TData, class TKey>
 void TList<TData, TKey>::Next()
 {
-	if (IsEnd()) return;
+	if (IsEnd())
+		throw "End of list!";
 	pPrev = pCurr;
 	pCurr = pNext;
 	if (pNext != nullptr)
@@ -145,7 +146,10 @@ void TList<TData, TKey>::Back(TData* _pData, TKey _key)
 		pPrev->pNext = new TNode<TData, TKey>(_key, _pData);
 		pCurr = cpCurr;
 		pPrev = cpPrev;
-		pNext = cpNext;
+		if (cpNext = nullptr)
+			pNext = pPrev->pNext;
+		else
+			pNext = cpNext;
 	}
 }
 
@@ -174,7 +178,7 @@ TNode<TData, TKey>* TList<TData, TKey>::Search(TKey key)
 template<class TData, class TKey>
 void TList<TData, TKey>::Push(TData* _pData, TKey _key)
 {
-	if (pFirst == nullptr) 
+	if (pFirst == nullptr)
 	{
 		pFirst = new TNode<TData, TKey>(_key, _pData);
 		pCurr = pFirst;
@@ -195,9 +199,9 @@ void TList<TData, TKey>::InsertAfter(TKey _key, TData* _pData, TKey newKey)
 	this->Reset();
 	TNode<TData, TKey>* node_search = Search(_key);
 
-	if (!node_search) 
+	if (!node_search)
 	{
-		throw "Key does not exist";
+		throw "Key does not exist!";
 	}
 
 	while (pCurr != node_search)
@@ -206,19 +210,19 @@ void TList<TData, TKey>::InsertAfter(TKey _key, TData* _pData, TKey newKey)
 	TNode<TData, TKey>* node = new TNode<TData, TKey>(newKey, _pData, pNext);
 	pCurr->pNext = node;
 
-	if (tmppCurrent == pCurr) 
+	if (tmppCurrent == pCurr)
 	{
 		pNext = node;
 	}
-	else 
+	else
 	{
 		pNext = tmppNext;
 	}
-	if (tmppCurrent == pNext) 
+	if (tmppCurrent == pNext)
 	{
 		pPrev = node;
 	}
-	else 
+	else
 	{
 		pPrev = tmppPrev;
 	}
@@ -227,13 +231,25 @@ void TList<TData, TKey>::InsertAfter(TKey _key, TData* _pData, TKey newKey)
 }
 
 template<class TData, class TKey>
-void TList<TData, TKey>::InsertBefore(TKey key, TData* _pData, TKey newKey)//dodelat
+void TList<TData, TKey>::InsertBefore(TKey key, TData* _pData, TKey newKey)
 {
 	TNode<TData, TKey>* pprev = pPrev;
 	TNode<TData, TKey>* pcurr = pCurr;
 	TNode<TData, TKey>* pnext = pNext;
 	TNode<TData, TKey>* searchnode = new TNode<TData, TKey>();
 	searchnode = pFirst;
+
+	/*if (searchnode->key == nullptr)
+	{
+		throw "Not found";
+		return;
+	}*/
+	TNode<TData, TKey>* node_search = Search(key);
+
+	if (!node_search)
+	{
+		throw "Key does not exist!";
+	}
 	while ((searchnode->pNext->key != key) && (searchnode != nullptr))
 	{
 		searchnode = searchnode->pNext;
@@ -258,75 +274,47 @@ void TList<TData, TKey>::InsertBefore(TKey key, TData* _pData, TKey newKey)//dod
 
 
 template<class TData, class TKey>
-void TList<TData, TKey>:: Remove(TKey _key)
+void TList<TData, TKey>::Remove(TKey _key)
 {
-	if (!pFirst)
-		throw "List is empty";
+	if (pFirst == nullptr)
+		throw "Error";
 	if (pFirst->key == _key)
 	{
+		TNode<TData, TKey>*next = pFirst->pNext;
 		if (pCurr == pFirst)
-		{
-			pCurr = pNext;
-			if (pNext)
-			{
-				pNext = pNext->pNext;
-			}
-			else
-			{
-				pNext = NULL;
-			}
-			delete pFirst;
-			pFirst = pCurr;
-			return;
-		}
-
-		if (pCurr == pFirst->pNext)
-		{
-			pPrev = NULL;
-			delete pFirst;
-			pFirst = pCurr;
-			return;
-		}
+			pCurr = next;
+		if (pPrev == pFirst)
+			pPrev = nullptr;
 		delete pFirst;
+		pFirst = next;
 		return;
 	}
-	TNode<TData, TKey>* tmppCurrent = pCurr;
-	TNode<TData, TKey>* tmppPrev = pPrev;
-	TNode<TData, TKey>* tmppNext = pNext;
-	this->Reset();
-	TNode<TData, TKey>* node_search = Search(_key);
-	if (!node_search)
+	TNode<TData, TKey>* prev = pFirst;
+	while ((prev->pNext != nullptr) && (prev->pNext->key != _key))
 	{
-		throw "The key not found";
+		prev = prev->pNext;
 	}
-	while (pCurr != node_search)
-		this->Next();
-	pPrev->pNext = pNext;
-	if (tmppCurrent == pCurr)
+	if (prev->pNext == nullptr)
+		throw "Error find";
+	TNode<TData, TKey>* next = prev->pNext->pNext;
+	if (pCurr == prev->pNext)
 	{
-		pCurr = tmppNext;
-		pNext = pCurr->pNext;
-		delete node_search;
-		return;
-	}
+		pCurr = next;
+		if (next == NULL)
+		{
+			throw "Error";
+		}
+		else
+		pNext = next->pNext;
 
-	if (tmppCurrent == pPrev) {
-		pCurr = pPrev;
-		pPrev = tmppPrev;
-		pNext = pCurr->pNext;
-		delete node_search;
-		return;
 	}
-	if (tmppCurrent == pNext)
-	{
-		pCurr = pNext;
-		pNext = pCurr->pNext;
-		delete node_search;
-		return;
-	}
+	if (pNext == prev->pNext)
+		pNext = next;
+	if (pPrev == prev)
+		pPrev = prev;
+	if (pCurr == next)
+		throw "Error";
+	delete prev->pNext;
+	prev->pNext = next;
 
-	pNext = tmppCurrent->pNext;
-	pCurr = tmppCurrent;
-	delete node_search;
-	return;
 };
