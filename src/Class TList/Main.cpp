@@ -15,6 +15,7 @@ void BackTest()//+
 		cout << list<<endl;
 	}
 	cout << list;
+	delete[] a;
 };
 void CopyingConstructorTest()//+
 {
@@ -99,6 +100,57 @@ void InsertBeforeTest()//+
 	list.InsertBefore(2, b, 11);
 	cout << list;
 };
+
+void InsertBeforeTestBad()
+{
+	cout << "Testing of InsertBefore-function:" << endl;
+	TList<double, double> list;
+	double* a = new double[10]{ 1,2,3,4,5,6,7,8,9,10 };
+	for (int i = 0; i < 10; i++)
+	{
+		list.Back((a + i), i);
+		cout << list << endl;
+	}
+	cout << "List before Insert:" << endl;
+	cout << list;
+	//cout << "List after InsertB:" << endl;
+	double* b = new double{ 99 };
+	try 
+	{
+		list.InsertBefore(36, b, 141);
+	}
+
+	catch (const char* er)
+	{
+		cout << er << endl;
+	}
+};
+
+void InsertAfterTestBad()//+
+{
+	cout << "Testing of InsertAfterBad-function:" << endl;
+	TList<double, double> list;
+	double* a = new double[10]{ 1,2,3,4,5,6,7,8,9,10 };
+	for (int i = 0; i < 10; i++)
+	{
+		list.Back((a + i), i);
+		cout << list << endl;
+	}
+	cout << "List before InsertA:" << endl;
+	cout << list;
+	//cout << "List after InsertA:" << endl;
+	double* b = new double{ 99 };
+	try 
+	{
+		list.InsertAfter(33, b, 113);
+	}
+	catch (const char* er)
+	{
+		cout << er << endl;
+	}
+	//cout << list;
+
+};
 int main()
 {
 	int n;
@@ -107,6 +159,8 @@ int main()
 
 		cout << "Choose:" << endl << "1-BackTest" << endl << "2-CopyingConstructorTest" << endl << "3- RemoveTest" << endl << "4- PushTest" << endl << "5-InsertAfterTest" << endl;
 		cout << "6-InsertBeforeTest" << endl;
+		cout << "7-InsertAfterTestBad" << endl;
+		cout << "8-InsertBeforeTestBad" << endl;
 		cin >> n;
 		switch (n)
 		{
@@ -140,10 +194,20 @@ int main()
 			InsertBeforeTest();
 			break;
 		}
+		case 7:
+		{
+			InsertAfterTestBad();
+			break;
+		}
+		case 8:
+		{
+			InsertBeforeTestBad();
+			break;
+		}
 		default:
 			cout << "Wrong number";
 		}
-	} while (n != 6);
+	} while (n != 7);
 	int pause;
 	cin >> pause;
 }
